@@ -105,7 +105,7 @@ settingsFolder.add(options,'temperature', 1, 500);
 settingsFolder.add(options,'positive', 0, 30).onChange(resetSim);
 settingsFolder.add(options,'negative', 0, 30).onChange(resetSim);
 settingsFolder.add(options,'neutral', 0, 30).onChange(resetSim);
-settingsFolder.add(options,'show_forces').onChange(resetSim);
+settingsFolder.add(options,'show_forces');
 settingsFolder.open();
 
 var ParticleFolder = gui.addFolder('Particle Settings')
@@ -232,10 +232,6 @@ function resetSim()
 	{
 		scene.remove(sphereArray[s])
 	}
-	if(show_forces == true)
-	{
-		options.neutral = 0;
-	}
 	sphereArray = [];
 	particleArray = [];
 	setUpParticles(options.positive,options.negative,options.neutral);
@@ -245,7 +241,7 @@ function showForces(distance,F1,F2, current, other)
 {
 		//var randomColor = "#000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
 		var Fmag = Math.abs(F1)/Math.abs(F2);
-		if(distance<40)
+		if(distance<40 && (particleArray[current].charge != 0 && particleArray[other].charge != 0))//close enough and neither are neutral
 		{
 			if (Fmag > 50000) //strong attractive forces 
 			{
@@ -285,13 +281,13 @@ setUpParticles(options.positive,options.negative,options.neutral);
 
 function animate()
 {
-	updateConstants()
+	
 	//var PE = 0; 
 	//var KE = 0; 
 	//var antiDC = 0 ;
 	for(let t = 0; t < 10; t++)
 	{
-		
+		updateConstants()
 		
 		//Calculate Velocity Scale
      	var ke = 0; 
@@ -331,11 +327,31 @@ function animate()
 				   Math.pow(particleArray[p].Velocity[1],2)+
 				   Math.pow(particleArray[p].Velocity[2],2));
 			ke2 = ke2 + (((particleArray[p].Mass) * Math.pow(vMag,2))/2);
+			
 			if (show_forces == true)
 			{
-				if(sphereArray[p].material.color != 0x00ff00)
+				if(particleArray[p].charge == 0)//if neutral, stay grey
+				{
+					sphereArray[p].material.color.set(0x8B8B8B) ;
+				}
+				else if(sphereArray[p].material.color != 0x00ff00)
 				{
 					sphereArray[p].material.color.set(0x00ff00) ;
+				}
+			}
+			else
+			{
+				if(Math.sign(particleArray[p].charge) == 1)//positive
+				{
+					sphereArray[p].material.color.set(0xeb34a2) ;
+				}
+				else if(Math.sign(particleArray[p].charge) == -1)
+				{
+					sphereArray[p].material.color.set(0x34e8eb) ; //negative
+				}
+				else
+				{
+					sphereArray[p].material.color.set(0x8B8B8B) ; //neutral
 				}
 			}
 		}
