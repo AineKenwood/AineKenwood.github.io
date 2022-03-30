@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 <html>
+<head>
+	<meta charset=utf-8>
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title>Simple Particle Motion</title>
+	<style>
+		body { margin: 0; background-color:#FFE4FD;}
+		canvas { width: 100%; height: 100% }
+		
+	</style>
+</head>
 <body>
 <h1> Hello World! Welcome to my Introductory MD Simulation  </h1>
     <!-- CDN Link to Three.js -->
