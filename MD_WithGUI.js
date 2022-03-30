@@ -99,7 +99,7 @@ var options = {
 	show_forces: false
 };
 
-var gui = new dat.GUI();
+var gui = new dat.GUI({width:450});
 var settingsFolder = gui.addFolder('System Settings')
 settingsFolder.add(options,'temperature', 1, 500);
 settingsFolder.add(options,'positive', 0, 30).onChange(resetSim);
@@ -111,7 +111,7 @@ settingsFolder.open();
 var ParticleFolder = gui.addFolder('Particle Settings')
 ParticleFolder.add(options,'magnitude_of_negative_charges', 1, 5).onChange(resetSim);
 ParticleFolder.add(options,'magnitude_of_positive_charges', 1, 5).onChange(resetSim);
-ParticleFolder.add(options,'radius', 1, 20).onChange(updateSphereGeometry);
+ParticleFolder.add(options,'radius', 3, 20).onChange(updateSphereGeometry);
 ParticleFolder.open();
 
 function maxwellDis(T)//Not toatally functional, cannot sample properly bc javascript >:V 
