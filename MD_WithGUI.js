@@ -96,7 +96,9 @@ var options = {
 	magnitude_of_positive_charges: 1,
 	magnitude_of_negative_charges: 1,
 	radius:5,
-	show_forces: false
+	show_forces: false,
+	epsilon: 1,
+	time_step: 0.001
 };
 
 var gui = new dat.GUI({width:450});
@@ -113,6 +115,11 @@ ParticleFolder.add(options,'magnitude_of_negative_charges', 1, 5).onChange(reset
 ParticleFolder.add(options,'magnitude_of_positive_charges', 1, 5).onChange(resetSim);
 ParticleFolder.add(options,'radius', 3, 20).onChange(updateSphereGeometry);
 ParticleFolder.open();
+
+var AdvancedFolder = gui.addFolder('Advanced Settings')
+AdvancedFolder.add(options,'time_step', 0.0005, 0.002);
+AdvancedFolder.add(options,'epsilon', 1, 500);
+AdvancedFolder.open();
 
 function maxwellDis(T)//Not toatally functional, cannot sample properly bc javascript >:V 
 {
@@ -224,6 +231,8 @@ function updateConstants()
 	show_forces = options.show_forces
 	radius = options.radius;
 	sigma = options.radius * 2; 
+	time_step = options.time_step;
+	epsilon = options.epsilon;
 }
 
 function resetSim()
