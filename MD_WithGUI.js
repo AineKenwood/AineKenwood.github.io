@@ -280,42 +280,6 @@ function showForces(Fnet,distance,current,other)
 			}
 	
 		}
-
-		/*
-		var Fmag = Math.abs(F1)/Math.abs(F2);
-		if(distance<40 && (particleArray[current].charge != 0 && particleArray[other].charge != 0))//close enough and neither are neutral
-		{
-			if (Fmag > 50000) //strong attractive forces 
-			{
-				sphereArray[current].material.color.set(0x15ea00) ;
-				sphereArray[other].material.color.set(0x15ea00) ;
-			}
-			else if (Fmag < 50000 && Fmag > 5000)
-			{
-			    sphereArray[current].material.color.set(0x40bf00) ;
-				sphereArray[other].material.color.set(0x40bf00) ;
-			}
-			else if(Fmag < 5000 && Fmag > 500)
-			{
-				sphereArray[current].material.color.set(0x6a9500) ;
-				sphereArray[other].material.color.set(0x6a9500) ;
-			}
-			else if (Fmag < 500 && Fmag >10)
-			{
-				sphereArray[current].material.color.set(0x956a00) ;
-				sphereArray[other].material.color.set(0x956a00);
-			}
-			else if (Fmag < 10 && Fmag > 5)
-			{
-				sphereArray[current].material.color.set(0xbf4000) ;
-				sphereArray[other].material.color.set(0xbf4000);
-			}
-			else
-			{
-				sphereArray[current].material.color.set(0xea1500) ;
-			    sphereArray[other].material.color.set(0xea1500);
-			}
-		}*/
 }
 
 
@@ -433,12 +397,12 @@ function animate()
 		        
 		    	if (show_forces == true)
     			{
-					if (distance < smallest_distance) 
-					{
-						smallest_distance = distance; //find closest particle
-						closest_particle = other; 
-					}
+				if (distance < smallest_distance) 
+				{
+					smallest_distance = distance; //find closest particle
+					closest_particle = other; 
 				}
+			}
 
 		    
 		        //calculate unit vectors 
