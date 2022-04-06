@@ -230,7 +230,7 @@ function updateConstants()
 	T = options.temperature * 50;
 	show_forces = options.show_forces
 	radius = options.radius;
-	sigma = options.radius * 2; 
+	sigma = (options.radius * 2)/1.12; 
 	time_step = options.time_step;
 	epsilon = options.epsilon;
 }
@@ -246,9 +246,42 @@ function resetSim()
 	setUpParticles(options.positive,options.negative,options.neutral);
 }
 
-function showForces(distance,F1,F2, current, other)
+function showForces(Fnet,distance,current,other)
 {
+		
+		//calculate unit vector for FNET 
+		    
+		var FnetMag = Math.sqrt(Math.pow(Fnet[0],2)+Math.pow(Fnet[1],2)+Math.pow(Fnet[2],2));
+		
+		var fUnitX = Fnet[0]/FnetMag;  
+		var fUnitY = Fnet[1]/FnetMag;  
+		var fUnitZ = Fnet[2]/FnetMag;  
+		
+		//calculate vector from particle of interest to other particle 
+		var difX = particleArray[other].Position[0] - particleArray[current].Position[0] ;
+		var difY = particleArray[other].Position[1] - particleArray[current].Position[1] ;
+		var difZ = particleArray[other].Position[2] - particleArray[current].Position[2] ;
+	
+		//compare if net force unit vector points towards other particle by taking dot procuct 
+		var dotProduct = (fUnitX * difX) + (fUnitY * difY) + (fUnitZ * difZ)
+		
 		//var randomColor = "#000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
+		if(distance < 40 && (particleArray[current].charge != 0 && particleArray[other].charge != 0))//close enough and neither are neutral
+		{
+			if(dotProduct > 0) //Fnet unit vector pointing towards other particle
+			{
+				sphereArray[current].material.color.set(0x40bf00) ;
+				sphereArray[other].material.color.set(0x40bf00) ;
+			}
+			else //Fnet unit vector pointing away from other particle
+			{
+				sphereArray[current].material.color.set(0xea1500) ;
+				sphereArray[other].material.color.set(0xea1500) ;
+			}
+	
+		}
+
+		/*
 		var Fmag = Math.abs(F1)/Math.abs(F2);
 		if(distance<40 && (particleArray[current].charge != 0 && particleArray[other].charge != 0))//close enough and neither are neutral
 		{
@@ -282,7 +315,7 @@ function showForces(distance,F1,F2, current, other)
 				sphereArray[current].material.color.set(0xea1500) ;
 			    sphereArray[other].material.color.set(0xea1500);
 			}
-		}
+		}*/
 }
 
 
@@ -337,31 +370,18 @@ function animate()
 				   Math.pow(particleArray[p].Velocity[2],2));
 			ke2 = ke2 + (((particleArray[p].Mass) * Math.pow(vMag,2))/2);
 			
-			if (show_forces == true)
+		
+			if(Math.sign(particleArray[p].charge) == 1)//positive
 			{
-				if(particleArray[p].charge == 0)//if neutral, stay grey
-				{
-					sphereArray[p].material.color.set(0x8B8B8B) ;
-				}
-				else if(sphereArray[p].material.color != 0x00ff00)
-				{
-					sphereArray[p].material.color.set(0x00ff00) ;
-				}
+				sphereArray[p].material.color.set(0xeb34a2) ;
+			}
+			else if(Math.sign(particleArray[p].charge) == -1)
+			{
+				sphereArray[p].material.color.set(0x34e8eb) ; //negative
 			}
 			else
 			{
-				if(Math.sign(particleArray[p].charge) == 1)//positive
-				{
-					sphereArray[p].material.color.set(0xeb34a2) ;
-				}
-				else if(Math.sign(particleArray[p].charge) == -1)
-				{
-					sphereArray[p].material.color.set(0x34e8eb) ; //negative
-				}
-				else
-				{
-					sphereArray[p].material.color.set(0x8B8B8B) ; //neutral
-				}
+				sphereArray[p].material.color.set(0x8B8B8B) ; //neutral
 			}
 		}
 		T_AfterUpdate = ((ke2* 2)/(particleArray.length* kb));
@@ -371,6 +391,9 @@ function animate()
 		for (let current = 0; current <	particleArray.length; current++)
 		{
 			Fnet= [0,0,0]
+			var closest_particle = 0; 
+			var smallest_distance = 250; 
+			
 			for(let other = 0; other < particleArray.length; other++)
 			{
 				/** 
@@ -410,7 +433,11 @@ function animate()
 		        
 		    	if (show_forces == true)
     			{
-					showForces(distance,F1,F2,current,other)
+					if (distance < smallest_distance) 
+					{
+						smallest_distance = distance; //find closest particle
+						closest_particle = other; 
+					}
 				}
 
 		    
@@ -429,6 +456,11 @@ function animate()
 		        Fnet[1] = Fnet[1] + (F3*r1UnitY); 
 		        Fnet[2] = Fnet[2] + (F3*r1UnitZ); 
 		        
+			}
+			
+			if (show_forces == true) //show forces after finding closest particle
+    		{
+				showForces(Fnet,smallest_distance,current,closest_particle)
 			}
 			
 			//antiDC = antiDC + 1; 
