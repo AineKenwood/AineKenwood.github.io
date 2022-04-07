@@ -28,13 +28,6 @@
 <body>
 <h1> Hello World! Welcome to my Introductory MD Simulation  </h1>
 
-	<div id = info> Clicked Particle Data <br><br>
-		<p id = "particle">  </p> 
-		<p id = "position">  </p> 
-		<p id = "velocity">  </p> 
-		<p id = "acceleration">  </p>
-		<p id = "fNet">  </p>
-	</div>
     <!-- CDN Link to Three.js -->
     	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -49,5 +42,12 @@
         <li>Keep all parameters constant but vary time step </li>
         <li>Keep all parameters constant but vary particle size </li>
     </ol>
+	<div id = info> Clicked Particle Data <br><br>
+		<p id = "particle">  </p> 
+		<p id = "position">  </p> 
+		<p id = "velocity">  </p> 
+		<p id = "acceleration">  </p>
+		<p id = "fNet">  </p>
+	</div>
 </body>
 </html>
