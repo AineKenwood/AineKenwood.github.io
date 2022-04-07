@@ -5,16 +5,39 @@
 	<style>
 		body { margin: 0;}
 		canvas { width: 100%; height: 100% }
+		#info {
+			position: absolute;
+			top: 150px;
+			left: 50px;
+			width: 300px;
+			text-align: center;
+			padding: 20px;
+			z-index: 100;
+			display:block;
+			background-color: #D5D5D5;
+			box-sizing: border-box;
+			border-radius: 25px;
+			}
+		  p {
+			background-color: #ECECEC;
+			box-sizing: border-box;
+			margin-bottom: 0;
+			margin-top: 0;
+			text-align: center;
+		    }
 		
 	</style>
 </head>
 <body>
 <h1> Hello World! Welcome to my Introductory MD Simulation  </h1>
-	<div id = "particle">  </div> 
-	<div id = "position">  </div> 
-	<div id = "velocity">  </div> 
-	<div id = "acceleration">  </div>
-	<div id = "fNet">  </div>
+
+	<div id = info> Clicked Particle Data <br><br>
+		<p id = "particle">  </p> 
+		<p id = "position">  </p> 
+		<p id = "velocity">  </p> 
+		<p id = "acceleration">  </p>
+		<p id = "fNet">  </p>
+	</div>
     <!-- CDN Link to Three.js -->
     	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
