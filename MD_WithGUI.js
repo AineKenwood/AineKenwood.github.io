@@ -28,11 +28,13 @@ class Particle
 
 //Set up scene and render
 const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 )
+const container = document.getElementById("container")
+
+const camera = new THREE.PerspectiveCamera( 75, container.offsetWidth/ container.offsetHeight, 0.1, 1000 )
 const renderer = new THREE.WebGLRenderer({ antialias: true})
 
-renderer.setSize( window.innerWidth, window.innerHeight )
-document.body.appendChild( renderer.domElement )
+renderer.setSize( container.offsetWidth, container.offsetHeight )
+container.appendChild( renderer.domElement )
 renderer.setClearColor("#DCFDFF")
 camera.position.set(150,150,400);
 camera.lookAt(scene.position);	
@@ -67,9 +69,9 @@ scene.add( pointLight );
 //listen for window resizing and adjust accordingly 
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
+    camera.aspect = container.offsetWidth/ container.offsetHeight
     camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setSize(container.offsetWidth, container.offsetHeight)
     render()
 }
 
@@ -102,7 +104,7 @@ var options = {
 	preset: "None",
 };
 
-var gui = new dat.GUI({width:500});
+var gui = new dat.GUI({width:500, autoplace: false});
 var settingsFolder = gui.addFolder('System Settings')
 settingsFolder.add(options,'temperature', 1, 500).listen();
 settingsFolder.add(options,'positive', 0, 30).listen().onChange(resetSim);
@@ -427,7 +429,7 @@ function animate()
 	//var KE = 0; 
 	//var antiDC = 0 ;
 
-	for(let t = 0; t < 8; t++)
+	for(let t = 0; t < 5; t++)
 	{
 		updateConstants()
 		
