@@ -64,7 +64,6 @@ var pointLight = new THREE.PointLight( 0xffffff, 1 );
 pointLight.position.set( 400, 400, 400 );
 scene.add( pointLight );
 
-
 //listen for window resizing and adjust accordingly 
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
@@ -75,7 +74,7 @@ function onWindowResize() {
 }
 
 // ================== CONSTANTS ===================
-var m = 1; 
+var m = 5; 
 var kb = 0.5; 
 var time_step = 0.001;
 var k = 8000;                                                              
@@ -85,6 +84,7 @@ var radius = 5;
 var T = 100; 
 var particleArray = [];
 var sphereArray = [];
+var particleIndex = -1;  //clicked particle index
 // ================== CONSTANTS ===================
 
 // add GUI
@@ -98,28 +98,37 @@ var options = {
 	radius:5,
 	show_forces: false,
 	epsilon: 1,
-	time_step: 0.001
+	time_step: 0.001,
+	preset: "None"
 };
 
-var gui = new dat.GUI({width:450});
+var gui = new dat.GUI({width:500});
 var settingsFolder = gui.addFolder('System Settings')
-settingsFolder.add(options,'temperature', 1, 500);
-settingsFolder.add(options,'positive', 0, 30).onChange(resetSim);
-settingsFolder.add(options,'negative', 0, 30).onChange(resetSim);
-settingsFolder.add(options,'neutral', 0, 30).onChange(resetSim);
-settingsFolder.add(options,'show_forces');
+settingsFolder.add(options,'temperature', 1, 500).listen();
+settingsFolder.add(options,'positive', 0, 30).listen().onChange(resetSim);
+settingsFolder.add(options,'negative', 0, 30).listen().onChange(resetSim);
+settingsFolder.add(options,'neutral', 0, 30).listen().onChange(resetSim);
+settingsFolder.add(options,'show_forces').name("Show Forces").listen();
+settingsFolder.add(options,'preset',
+					['None','Temperature and Speed', 'Attractive and Repulsive Forces',
+					'Net Force and Distance','Intermolecular Interactions and Particle Size'])
+					.name('Experimental Preset').listen().onChange(setUpPreset)
 settingsFolder.open();
 
 var ParticleFolder = gui.addFolder('Particle Settings')
-ParticleFolder.add(options,'magnitude_of_negative_charges', 1, 5).onChange(resetSim);
-ParticleFolder.add(options,'magnitude_of_positive_charges', 1, 5).onChange(resetSim);
-ParticleFolder.add(options,'radius', 3, 20).onChange(updateSphereGeometry);
+ParticleFolder.add(options,'magnitude_of_negative_charges', 1, 5).name("Negative Charge Magnitude").listen().onChange(resetSim);
+ParticleFolder.add(options,'magnitude_of_positive_charges', 1, 5).name("Positive Charge Magnitude").listen().onChange(resetSim);
+ParticleFolder.add(options,'radius', 3, 20).listen().onChange(updateSphereGeometry);
 ParticleFolder.open();
 
 var AdvancedFolder = gui.addFolder('Advanced Settings')
-AdvancedFolder.add(options,'time_step', 0.0005, 0.002);
-AdvancedFolder.add(options,'epsilon', 1, 500);
-AdvancedFolder.open();
+AdvancedFolder.add(options,'time_step', 0.0005, 0.002).name("Time Step").listen();
+AdvancedFolder.add(options,'epsilon', 1, 500).listen();
+
+//Add Raycasting 
+var raycaster, mouse = {x: 0, y: 0 }
+raycaster = new THREE.Raycaster();
+renderer.domElement.addEventListener('pointerdown',raycast,false);
 
 function maxwellDis(T)//Not toatally functional, cannot sample properly bc javascript >:V 
 {
@@ -199,7 +208,7 @@ function setUpParticles(numPositive,numNeg, numNeutral)
 			material = new THREE.MeshStandardMaterial( { color: 0xeb34a2 })
 		}
    		
-       	var mass = 1; 
+       	var mass = 2.5; 
     	var acc = [0,0,0];
 		
 		// create basic Sphere object 
@@ -212,6 +221,53 @@ function setUpParticles(numPositive,numNeg, numNeutral)
 		//create new particle
 		let p = new Particle(velocity, position, acc, charge, mass);
 		particleArray[i] = p; 
+	}
+}
+//listen for click, return index of clicked sphere 
+function raycast(event)
+{
+	//get mouse coordinates where clicked
+	var rect = renderer.domElement.getBoundingClientRect();
+	mouse.x = ( ( event.clientX - rect.left ) / ( rect.width - rect.left ) ) * 2 - 1;
+	mouse.y = - ( ( event.clientY - rect.top ) / ( rect.bottom - rect.top) ) * 2 + 1;
+    
+    //set ray origin 
+    raycaster.setFromCamera( mouse, camera );  
+    
+    //find intersecting objects
+    var intersects = raycaster.intersectObjects( sphereArray );
+    
+     if (intersects.length > 0)
+     {
+		
+		for (var s = 0; s< sphereArray.length; s++ )
+		{
+			var x = intersects[0].point.x - sphereArray[s].position.x ;
+			var y = intersects[0].point.y - sphereArray[s].position.y ;
+			var z = intersects[0].point.z - sphereArray[s].position.z ;
+			var dis = Math.sqrt((Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)));
+
+			if(dis <= options.radius)
+			{
+				particleIndex = s;
+				
+				if(intersects[0].object.material.opacity == 0.5)//reset particle back to normal
+         		{
+					const newMaterial = intersects[0].object.material.clone();
+	    			newMaterial.transparent = false;
+	    			newMaterial.opacity = 1;
+	    			intersects[0].object.material = newMaterial;
+	    			particleIndex = -1;
+				 }
+				 else
+				 {
+					const newMaterial = intersects[0].object.material.clone();
+    		 		newMaterial.transparent = true;
+   	    	 		newMaterial.opacity = 0.5;
+        	 		intersects[0].object.material = newMaterial;
+				}
+			}
+		}
 	}
 }
 
@@ -243,6 +299,7 @@ function resetSim()
 	}
 	sphereArray = [];
 	particleArray = [];
+	particleIndex = -1; 
 	setUpParticles(options.positive,options.negative,options.neutral);
 }
 
@@ -270,27 +327,106 @@ function showForces(Fnet,distance,current,other)
 		{
 			if(dotProduct > 0) //Fnet unit vector pointing towards other particle
 			{
-				sphereArray[current].material.color.set(0x40bf00) ;
-				sphereArray[other].material.color.set(0x40bf00) ;
+				sphereArray[current].material.color.set(0x82ff80) ;
+				sphereArray[other].material.color.set(0x82ff80) ;
 			}
 			else //Fnet unit vector pointing away from other particle
 			{
-				sphereArray[current].material.color.set(0xea1500) ;
-				sphereArray[other].material.color.set(0xea1500) ;
+				sphereArray[current].material.color.set(0xff8680) ;
+				sphereArray[other].material.color.set(0xff8680) ;
 			}
 	
 		}
+
 }
 
+function setUpPreset()
+{
+	var preset = options.preset; 
+	
+	switch(preset)
+	{
+		case "Temperature and Speed":
+			options.positive = 10;
+			options.negative = 10;
+			options.neutral = 10;
+			options.radius = 5;
+			options.epsilon = 500; 
+			options.magnitude_of_negative_charges = 1;
+			options.magnitude_of_positive_charges = 1;
+			options.show_forces = false;
+			options.time_step = 0.001; 
+			options.temperature = 250;
+			resetSim();
+			break;
+		case "Attractive and Repulsive Forces":
+			options.positive = 5;
+			options.negative = 5;
+			options.neutral = 0;
+			options.radius = 10;
+			options.epsilon = 1; 
+			options.temperature = 100;
+			options.magnitude_of_negative_charges = 2;
+			options.magnitude_of_positive_charges = 2;
+			options.time_step = 0.001; 
+			options.show_forces = true; 
+			resetSim();
+			break;
+		case "Net Force and Distance":
+			options.positive = 1;
+			options.negative = 1;
+			options.neutral = 0;
+			options.radius = 10;
+			options.epsilon = 1; 
+			options.temperature = 150;
+			options.magnitude_of_negative_charges = 3;
+			options.magnitude_of_positive_charges = 3;
+			options.time_step = 0.001; 
+			options.show_forces = false; 
+			resetSim();
+			break;
+		case "Intermolecular Interactions and Particle Size":
+			options.positive = 5;
+			options.negative = 5;
+			options.neutral = 0;
+			options.radius = 5;
+			options.epsilon = 1; 
+			options.temperature = 100;
+			options.magnitude_of_negative_charges = 3;
+			options.magnitude_of_positive_charges = 3;
+			options.time_step = 0.001; 
+			options.show_forces = false; 
+			resetSim();
+			break;
+		case "None":
+			options.positive = 10;
+			options.negative = 10;
+			options.neutral = 10;
+			options.radius = 5;
+			options.epsilon = 1; 
+			options.temperature = 100;
+			options.magnitude_of_negative_charges = 1;
+			options.magnitude_of_positive_charges = 1;
+			options.time_step = 0.001; 
+			options.show_forces = false; 
+			resetSim();
+			resetSim();
+			break;
+	}
+}
 
 setUpParticles(options.positive,options.negative,options.neutral);
 
+var textPositionX; var textPositionX; var textPositionX;
+var textVelocityX; var textVelocityY;  var textVelocityZ; 
+var textAccelerationX; var textAccelerationY; var textAccelerationZ; 
+var textFNetX; var textFNetY; var textFNetZ;
 function animate()
 {
-	
 	//var PE = 0; 
 	//var KE = 0; 
 	//var antiDC = 0 ;
+
 	for(let t = 0; t < 10; t++)
 	{
 		updateConstants()
@@ -321,6 +457,12 @@ function animate()
 	  		particleArray[p].Position[1] = particleArray[p].Position[1] + (particleArray[p].Velocity[1] * time_step);
 	  		particleArray[p].Position[2] = particleArray[p].Position[2] + (particleArray[p].Velocity[2] * time_step);
 	  		
+	  		if (particleIndex != -1)
+	  		{
+				textPositionX = Math.trunc(particleArray[p].Position[0])
+				textPositionY = Math.trunc(particleArray[p].Position[1])
+				textPositionZ = Math.trunc(particleArray[p].Position[2])
+			}
 	  		//update sphere positions 
 	  		sphereArray[p].position.set(particleArray[p].Position[0],particleArray[p].Position[1],particleArray[p].Position[2]);
 		}
@@ -334,7 +476,12 @@ function animate()
 				   Math.pow(particleArray[p].Velocity[2],2));
 			ke2 = ke2 + (((particleArray[p].Mass) * Math.pow(vMag,2))/2);
 			
-		
+			//set not currently clicked particles to normal opacity
+			if (p != particleIndex)
+			{
+				sphereArray[p].material.opacity = 1;
+			}
+			
 			if(Math.sign(particleArray[p].charge) == 1)//positive
 			{
 				sphereArray[p].material.color.set(0xeb34a2) ;
@@ -347,6 +494,7 @@ function animate()
 			{
 				sphereArray[p].material.color.set(0x8B8B8B) ; //neutral
 			}
+			
 		}
 		T_AfterUpdate = ((ke2* 2)/(particleArray.length* kb));
 		scale2 = Math.sqrt(T/T_AfterUpdate)
@@ -397,12 +545,12 @@ function animate()
 		        
 		    	if (show_forces == true)
     			{
-				if (distance < smallest_distance) 
-				{
-					smallest_distance = distance; //find closest particle
-					closest_particle = other; 
+					if (distance < smallest_distance) 
+					{
+						smallest_distance = distance; //find closest particle
+						closest_particle = other; 
+					}
 				}
-			}
 
 		    
 		        //calculate unit vectors 
@@ -435,6 +583,17 @@ function animate()
 			var aZ = Fnet[2]/(particleArray[current].Mass);
 			//update acceleration
 			particleArray[current].Acceleration = [aX,aY,aZ];
+			
+		
+			if (current == particleIndex)
+	  		{
+				textFNetX = Math.trunc(Fnet[0]); 
+				textFNetY = Math.trunc(Fnet[1]); 
+				textFNetZ = Math.trunc(Fnet[2]); 
+				textAccelerationX = Math.trunc(particleArray[current].Acceleration[0]);
+				textAccelerationY = Math.trunc(particleArray[current].Acceleration[1]);
+				textAccelerationZ = Math.trunc(particleArray[current].Acceleration[2]);
+			}
 			//console.log(particleArray[current].Acceleration)
 			
 			//UPDATE full timestep velocity
@@ -467,6 +626,13 @@ function animate()
 	  		particleArray[current].Velocity[0] =  scale2*(particleArray[current].Velocity[0] + ( particleArray[current].Acceleration[0] * time_step* 0.5));
 	  	    particleArray[current].Velocity[1] =  scale2*(particleArray[current].Velocity[1] + ( particleArray[current].Acceleration[1] * time_step* 0.5));
 	  	    particleArray[current].Velocity[2] =  scale2*(particleArray[current].Velocity[2] + ( particleArray[current].Acceleration[2] * time_step* 0.5));
+	  	    
+	  	    if (particleIndex != -1)
+	  		{
+				textVelocityX = Math.trunc(particleArray[current].Velocity[0]);
+				textVelocityY = Math.trunc(particleArray[current].Velocity[1]);
+				textVelocityZ = Math.trunc(particleArray[current].Velocity[2]);
+			}
 		}
 		
 		/** 
@@ -480,6 +646,34 @@ function animate()
 		var totalE = KE + PEforTimestep; 
 		*/
 		//console.log(PEforTimestep, KE, totalE);
+		
+		if (particleIndex == -1)
+		{
+			const particleText = document.getElementById("particle");
+			particleText.innerHTML = "No Particle Selected" ;
+			const positionText = document.getElementById("position");
+			positionText.innerHTML = "";
+			const velocityText = document.getElementById("velocity");
+			velocityText.innerHTML = "" ;
+			const accText = document.getElementById("acceleration");
+			accText.innerHTML = "";
+			const fText = document.getElementById("fNet");
+			fText.innerHTML = "";
+		}
+		else
+		{
+			const particleText = document.getElementById("particle");
+			particleText.innerHTML = "Particle Selected: " + particleIndex ;
+			const positionText = document.getElementById("position");
+			positionText.innerHTML = "Position =  [" + textPositionX + ","+ textPositionY + "," + textPositionZ+ "]";
+			const velocityText = document.getElementById("velocity");
+			velocityText.innerHTML = "Velocity = [" + textVelocityX + ","+ textVelocityY + "," + textVelocityZ+ "]" ;
+			const accText = document.getElementById("acceleration");
+			accText.innerHTML = "Acceleration =  [" + textAccelerationX + ","+ textAccelerationY + "," + textAccelerationZ+ "]";
+			const fText = document.getElementById("fNet");
+			fText.innerHTML = "Net Force =  [" + textFNetX + ","+ textFNetY + "," + textFNetZ+ "]";
+		}
+
 	}	
     requestAnimationFrame( animate );  
     renderer.render(scene, camera);
