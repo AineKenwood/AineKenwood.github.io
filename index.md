@@ -7,9 +7,6 @@
 		canvas { width: 100%; height: 100% }
 		#info {
 			position: absolute;
-			top: 450px;
-			left: 50px;
-			width: 300px;
 			text-align: center;
 			padding: 20px;
 			z-index: 100;
