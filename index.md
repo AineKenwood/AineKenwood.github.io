@@ -1,12 +1,15 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<title>Simple Particle Motion</title>
+	<title>Interactive MD Simulation</title>
 	<style>
 		body { margin: 0;}
 		canvas { width: 100%; height: 100% }
 		#info {
 			position: absolute;
+			top: 150px;
+			left: 50px;
+			width: 300px;
 			text-align: center;
 			padding: 20px;
 			z-index: 100;
@@ -26,7 +29,7 @@
 	</style>
 </head>
 <body>
-<h1> Hello World! Welcome to my Introductory MD Simulation  </h1>
+<h1> Welcome to my Introductory MD Simulation  </h1>
 	<div id = info> Clicked Particle Data <br><br>
 		<p id = "particle">  </p> 
 		<p id = "position">  </p> 
