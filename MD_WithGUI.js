@@ -99,7 +99,7 @@ var options = {
 	show_forces: false,
 	epsilon: 1,
 	time_step: 0.001,
-	preset: "None"
+	preset: "None",
 };
 
 var gui = new dat.GUI({width:500});
@@ -112,12 +112,12 @@ settingsFolder.add(options,'show_forces').name("Show Forces").listen();
 settingsFolder.add(options,'preset',
 					['None','Temperature and Speed', 'Attractive and Repulsive Forces',
 					'Net Force and Distance','Intermolecular Interactions and Particle Size'])
-					.name('Experimental Preset').listen().onChange(setUpPreset)
+					.name('Preset').listen().onChange(setUpPreset)
 settingsFolder.open();
 
 var ParticleFolder = gui.addFolder('Particle Settings')
-ParticleFolder.add(options,'magnitude_of_negative_charges', 1, 5).name("Negative Charge Magnitude").listen().onChange(resetSim);
-ParticleFolder.add(options,'magnitude_of_positive_charges', 1, 5).name("Positive Charge Magnitude").listen().onChange(resetSim);
+ParticleFolder.add(options,'magnitude_of_negative_charges', 1, 5).name("Negative Charge").listen().onChange(resetSim);
+ParticleFolder.add(options,'magnitude_of_positive_charges', 1, 5).name("Positive Charge").listen().onChange(resetSim);
 ParticleFolder.add(options,'radius', 3, 20).listen().onChange(updateSphereGeometry);
 ParticleFolder.open();
 
@@ -427,7 +427,7 @@ function animate()
 	//var KE = 0; 
 	//var antiDC = 0 ;
 
-	for(let t = 0; t < 10; t++)
+	for(let t = 0; t < 8; t++)
 	{
 		updateConstants()
 		
