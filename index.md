@@ -10,6 +10,11 @@
 </head>
 <body>
 <h1> Hello World! Welcome to my Introductory MD Simulation  </h1>
+	<div id = "particle">  </div> 
+	<div id = "position">  </div> 
+	<div id = "velocity">  </div> 
+	<div id = "acceleration">  </div>
+	<div id = "fNet">  </div>
     <!-- CDN Link to Three.js -->
     	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
