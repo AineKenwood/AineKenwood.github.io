@@ -30,11 +30,11 @@ class Particle
 const scene = new THREE.Scene()
 const container = document.getElementById("container")
 
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth/ window.innerHeight, 0.1, 1000 )
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth/ (window.innerHeight-100), 0.1, 1000 )
 const renderer = new THREE.WebGLRenderer({ antialias: true})
 
 document.body.appendChild( renderer.domElement );
-renderer.setSize(window.innerWidth, window.innerHeight )
+renderer.setSize(window.innerWidth, (window.innerHeight - 100) )
 renderer.setClearColor("#DCFDFF")
 camera.position.set(150,150,400);
 camera.lookAt(scene.position);	
@@ -69,10 +69,9 @@ scene.add( pointLight );
 //listen for window resizing and adjust accordingly 
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
-    camera.aspect = window.innerWidth/ window.innerHeight
+    camera.aspect = window.innerWidth/ (window.innerHeight - 100)
     camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth,window.innerHeight)
-    render()
+    renderer.setSize(window.innerWidth,(window.innerHeight-100))
 }
 
 // ================== CONSTANTS ===================
