@@ -30,11 +30,11 @@ class Particle
 const scene = new THREE.Scene()
 const container = document.getElementById("container")
 
-const camera = new THREE.PerspectiveCamera( 75, container.offsetWidth/ container.offsetHeight, 0.1, 1000 )
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth/ window.innerHeight, 0.1, 1000 )
 const renderer = new THREE.WebGLRenderer({ antialias: true})
 
-renderer.setSize( container.offsetWidth, container.offsetHeight )
-container.appendChild( renderer.domElement )
+document.body.appendChild( renderer.domElement );
+renderer.setSize(window.innerWidth, window.innerHeight )
 renderer.setClearColor("#DCFDFF")
 camera.position.set(150,150,400);
 camera.lookAt(scene.position);	
@@ -69,9 +69,9 @@ scene.add( pointLight );
 //listen for window resizing and adjust accordingly 
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
-    camera.aspect = container.offsetWidth/ container.offsetHeight
+    camera.aspect = window.innerWidth/ window.innerHeight
     camera.updateProjectionMatrix()
-    renderer.setSize(container.offsetWidth, container.offsetHeight)
+    renderer.setSize(window.innerWidth,window.innerHeight)
     render()
 }
 
@@ -104,9 +104,10 @@ var options = {
 	preset: "None",
 };
 
-var gui = new dat.GUI({width:500, autoplace: false});
+var gui = new dat.GUI({width: 450});
+gui.domElement.id = 'gui';
 var settingsFolder = gui.addFolder('System Settings')
-settingsFolder.add(options,'temperature', 1, 500).listen();
+settingsFolder.add(options,'temperature', 1, 1000).listen();
 settingsFolder.add(options,'positive', 0, 30).listen().onChange(resetSim);
 settingsFolder.add(options,'negative', 0, 30).listen().onChange(resetSim);
 settingsFolder.add(options,'neutral', 0, 30).listen().onChange(resetSim);
@@ -115,17 +116,15 @@ settingsFolder.add(options,'preset',
 					['None','Temperature and Speed', 'Attractive and Repulsive Forces',
 					'Net Force and Distance','Intermolecular Interactions and Particle Size'])
 					.name('Preset').listen().onChange(setUpPreset)
-settingsFolder.open();
 
 var ParticleFolder = gui.addFolder('Particle Settings')
 ParticleFolder.add(options,'magnitude_of_negative_charges', 1, 5).name("Negative Charge").listen().onChange(resetSim);
 ParticleFolder.add(options,'magnitude_of_positive_charges', 1, 5).name("Positive Charge").listen().onChange(resetSim);
 ParticleFolder.add(options,'radius', 3, 20).listen().onChange(updateSphereGeometry);
-ParticleFolder.open();
 
 var AdvancedFolder = gui.addFolder('Advanced Settings')
 AdvancedFolder.add(options,'time_step', 0.0005, 0.002).name("Time Step").listen();
-AdvancedFolder.add(options,'epsilon', 1, 500).listen();
+AdvancedFolder.add(options,'epsilon', 1, 1000).listen();
 
 //Add Raycasting 
 var raycaster, mouse = {x: 0, y: 0 }
@@ -352,8 +351,8 @@ function setUpPreset()
 			options.positive = 10;
 			options.negative = 10;
 			options.neutral = 10;
-			options.radius = 5;
-			options.epsilon = 500; 
+			options.radius = 10;
+			options.epsilon = 1000; 
 			options.magnitude_of_negative_charges = 1;
 			options.magnitude_of_positive_charges = 1;
 			options.show_forces = false;
@@ -652,15 +651,15 @@ function animate()
 		if (particleIndex == -1)
 		{
 			const particleText = document.getElementById("particle");
-			particleText.innerHTML = "No Particle Selected" ;
+			particleText.innerHTML = "None" ;
 			const positionText = document.getElementById("position");
-			positionText.innerHTML = "";
+			positionText.innerHTML = "None";
 			const velocityText = document.getElementById("velocity");
-			velocityText.innerHTML = "" ;
+			velocityText.innerHTML = "None" ;
 			const accText = document.getElementById("acceleration");
-			accText.innerHTML = "";
+			accText.innerHTML = "None";
 			const fText = document.getElementById("fNet");
-			fText.innerHTML = "";
+			fText.innerHTML = "None";
 		}
 		else
 		{
