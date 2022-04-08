@@ -3,7 +3,7 @@
 	<head>
 		<meta charset=utf-8>
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<title>Interactive Molecular Dynamics Simulation</title>
+		<title>Simple Particle Motion</title>
 		<style> 
 			body {
 			 margin: 0;
@@ -47,7 +47,7 @@
 			h1
 				{ color: #19323c; text-align: center;}
 			h4
-				{ color: #19323c; text-align: left;}
+				{ color: #19323c; text-align: left; box-sizing: border-box;}
 			/* Style the button that is used to open and close the collapsible content */
 			.accordion {
 			  background-color: #e5e6eb;
@@ -56,10 +56,10 @@
 			  padding: 18px;
 			  width: 100%;
 			  text-align: left;
-			  border: 1px;
 			  outline: none;
 			  transition: 0.4s;
 			  font-size: 15px;
+			  border: 0px;
 			}
 			
 			/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
@@ -86,50 +86,135 @@
 				.active:after {
 				  content: "\2796"; /* Unicode character for "minus" sign (-) */
 				}
-				.discr
+				.descr
 				{
 				 text-align: left;
+				 padding: 10px;
+				}
+				 .flex-container {
+				    display: flex;
+				}
+				
+				.flex-child {
+				    flex: 1;
+				}  
+				
+				.flex-child:first-child {
+				    margin-right: 5px;
 				}
 		</style>
 	</head>
 <body>
 	<h1> Introductory, Interactive Molecular Dynamics Simulation  </h1> <br>
-	
-		 <p>Experimental Presets </p>
+	<h5 style = "text-align: center">By Aine Kenwood :)</h5>
+		<div class="flex-container">
+
+		  <div class="flex-child about">
+	  		<button class="accordion">About</button>
+	  			<div class="content"> <!--  <h3 style = " background-color: #e5e6eb; padding: 18px; text-align: left;">About</h3>-->
+		  			<div class = "descr">
+		  				This is my thesis and it has been a super fun and rewarding journey! Shout out to my cat and lofi jazz for getting me through this <br><br> 	
+		  				\(◕‿◕)/ ♡ (^=◕ᴥ◕=^)</div>
+			  </div>
+		  </div>
+		  <div class="flex-child How To"> 
+		 		  <button class="accordion">How to Use</button>
+		 		 <!--  <h3 style = " background-color: #e5e6eb; padding: 18px; text-align: left;">How to Use</h3> --> 	 
+		  			<div class="content">
+			  			<div style = "font-size: small" class = "descr">
+			  				Scroll down to the end of this page to see the simulation. In the bottom right corner you will see three
+			  				closed black folders labeled "System Setting, Particle Setting and Advanced Settings". These are the settings for the simulation. 
+			  				If you click on one of these folders, it will open to reveal the different simulation settings.
+			  				By changing values in the settings, you can change the behavior of the simulation. 
+			  				
+			  				<h4>System Settings has the following variables: </h4>
+			  					<ul>
+	  								<li><em>Temperature:</em>   the overall temperature of the system</li>
+			  						<li><em>positive:</em>    the number of positive (pink) particles in the simulation </li>
+			  						<li><em>negative:</em>    the number of negative (blue) particles in the simulation  </li>
+			  						<li><em>neutral:</em>    the number of neutral (pink) particles in the simulation </li>
+			  						<li><em>Show Forces:</em>    When checked, the simulation will display forces between particles by changing the particles color. Green = attractive. Red = repulsive </li>
+			  						<li><em>Preset:</em>    When changed, this will set the simulation to one of the experimental presets. They are described below in more detail</li>
+			  					</ul>
+			  				<h4>Particle Settings has the following variables: </h4>
+			  					<ul>
+	  								<li><em>Negative Charge:</em>   the magnitude of negative charge on the negative particles in the system</li>
+			  						<li><em>Positive Charge:</em>   the magnitude of positive charge on the positive particles in the system </li>
+			  						<li><em>Radius:</em>    the radius of the particles in the simulation  </li>
+			  					</ul>
+			  					
+			  				Don't touch the advanced settings :) (Unless you know what you're doing)
+			  				
+			  				You can click on particles to display their position, velocity, acceleration, and net force within the "Clicked Particle Data" box above the simulation. 
+			  				Only one particle can be selected at a time. <br><br>
+			  				
+			  				You can zoom in & out on the simulation using the mouse scroll wheel. If you're using a mouse pad, you can use two fingers to zoom in and out. 
+			  				Using the left mouse button, you can click and drag to rotate the simulation around in three dimensions. 
+			  				Using the right mouse button, you can click and drag to move the simulation in 3D space. 
+			  			</div>
+		  		</div>
+		  </div>
+	</div>
+		
+		 
+		 <h2 style = " color: #19323c; padding: 15px; text-align: center;">Experimental Presets </h2>
     	<button class="accordion">Temperature and Speed</button>
 		<div class="content">
-  			<div class = "descr">For this experiment, first find the settings box in the lower right section of the screen.
-  				Within "system Settings", select “Temperature and Speed” 
-  				from the experimental preset drop down menu. 
-  				After the settings change, vary the Temperature setting and observe how it affects the system</div>
-  			<h4>Consider the following questions</h4>
+  			<div class = "descr">For this experiment, select “Temperature and Speed”  within 
+  				the experimental preset drop down menu.
+  				After the settings change, vary the Temperature setting and observe how it affects the system.</div>
+  			<h4>Consider the following investigation questions</h4>
   			<ul>
-  				<li>When you increase temperature, what happens to the speed of the particles? What about when you decrease temperature?</li>
-  				<li>Can you get the particles to form a crystal structure? </li>
-  				<li>When do you see more intermolecular interactions occurring, at high or low temperatures? </li>
-  				<li>When do the particles form a solid? When do they form a gas?</li>
+  				<li>When you increase temperature, what happens to the average speed of the particles? What about when you decrease temperature?</li>
+  				<li>Can you get the particles to form a solid-like structure? </li>
+  				<li>When do intermolecular interactions dominate, at high or low temperatures? </li>
+  				<li>Do the particles form a solid at low or high temperatures?  Do they form a gas at low or high temperatures?</li>
   			</ul>
 		</div>
 		<button class="accordion">Attractive and Repulsive Forces</button>
 		<div class="content">
-  			<p>For this experiment, select “Attractive and Repulsive” forces within 
-  				the experimental preset drop down menu. After the settings change, You will now see the particles color’s change to green and red. 
-  				These colors represent the balance between the attractive and repulsive forces acting on the particles. 
-  				When a particle is  green, it is feeling an attractive force.
-  				When a particle is red, it is a repulsive force. When attractive and repulsive forces are in equilibrium, the particle will switch between red and green rapidly. 
-			</p>
+  			<div class = "descr">For this experiment, select “Attractive and Repulsive” forces within 
+  				the experimental preset drop down menu. After the settings change, You will now see the particles color’s occasionally change to green or red. 
+  				These colors represent the attractive and repulsive forces acting on the particles. 
+  				When a particle is  green, it is experiencing an attractive force towards the nearest particle.
+  				When a particle is red, it is experiencing a repulsive force towards the nearest particle.
+  				When attractive and repulsive forces are in equilibrium, the particle will switch between red and green. 
+  				If you want a more quantitative representation of the net force acting on a particle, you can click a particle to see its net force displayed 
+  				within the "clicked particle data" box above the simulation. 
+			</div>
+			<h4>Consider the following investigation questions</h4>
+  			<ul>
+  				<li>How do a pair of particles behave when their attractive and repulsive forces are in equilibrium with each other?</li>
+  				<li>Do a pair of particles in equilibrium always stay together? What can "pull" them apart? </li>
+  				<li>Change the simulation's settings so that there are only negative or positive particles. What kind of forces do you see between similarly charged particles?</li>
+  				<li>Increase the magnitude of charge on the particles in the system. How does charge magnitude impact the magnitude of the net force felt by particles? </li>
+  			</ul>
 		</div>
 		<button class="accordion">Net Force and Distance</button>
 		<div class="content">
-  			<p>For this experiment, select “Force and Distance” within the experimental preset drop down menu. 
-  			  After the settings change, click a particle and observe how its position, velocity and acceleration change depending on how far/close it is to other particles.
+  			<div class = "descr">For this experiment, select “Net Force and Distance” within the experimental preset drop down menu. 
+  			  After the settings change, click a particle and observe how its position, velocity and acceleration change depending on how far/close it is to other particles. 
+  			  The particles data will be displayed in the "Clicked Particle Data" box above the simulation. 
   			   Remember that acceleration is related to the net force a particle is experiencing by Newton’s second Law: F = ma (Net force = mass * acceleration).  
-  			</p>
+  			</div>
+  			<h4>Consider the following investigation questions</h4>
+  			<ul>
+  				<li>When does a particle experience the greatest acceleration? How do acceleration and net force change relative to each other? </li>
+  				<li>When you have two oppositely charged particles, how does distance between the particles impact the net force experienced by each particle in the pair? </li>
+  				<li>When Is the net force acting on a particle the largest? When is it the smallest?  </li>
+  				<li>What causes a particle's velocity to increase? What causes a particle's velocity to decrease? How does a particle's position relate to its velocity?</li>
+  			</ul>
 		</div>
 		<button class="accordion">Intermolecular Interactions and Particle Size</button>
 		<div class="content">
-  			<p>For this experiment, select “Particle Size” within the experimental preset drop down menu. 
-  			   After the settings change, vary the radius setting and observe how the strength of interactions between particles change. </p>
+  			<div class = "descr">For this experiment, select “Particle Size” within the experimental preset drop down menu. 
+  			   After the settings change, vary the radius setting and observe how the strength of interactions between particles change.</div>
+  			  <h4>Consider the following investigation questions</h4>
+  			<ul>
+  				<li>Change the system settings so the radius of particles is 20. How does a larger radius impact the strength of the intermolecular interactions between the particles?</li>
+  				<li>Change the system settings so the radius of the particles is 3. How does a smaller radius impact the strength of the intermolecular interactions between the particles? </li>
+  				<li>When do you observe "tighter" (the particle's centers are closer together) interactions between particles? With particles of a larger or smaller radius? </li>
+  			</ul>
 		</div>
 		<div id = info> Clicked Particle Data <br><br>
 			 <h6 id = "particle">  </h6> 
