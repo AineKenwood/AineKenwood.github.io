@@ -3,61 +3,165 @@
 	<head>
 		<meta charset=utf-8>
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<title>Interactive Molecular Dynamics Simulation</title>
-		<style>
-			body { margin: 0; }
+		<title>Simple Particle Motion</title>
+		<style> 
+			body {
+			 margin: 0;
+			 font-family: Verdana, sans-serif; 
+			 }
 			canvas { width: 100vh; height: 100vh }
 			#info {
-					position: absolute;
-					top: 20vh;
+					position: relative;
+					/*bottom: 5vh;
 					left: 5vw;
-					width: 20vw;
+					width: 20vw;*/
 					text-align: center;
 					padding: 20px;
-					z-index: 100;
+					margin: auto;
+					/*z-index: 100;*/
 					display:block;
-					background-color: #D5D5D5;
+					background-color: #c0c2ce;
 					box-sizing: border-box;
-					border-radius: 25px;
 					}
 			p {
-				background-color: #ECECEC;
-				box-sizing: border-box;
-				margin-bottom: 0;
-				margin-top: 0;
-				text-align: center;
+					background-color: #FFFFFF;
+					box-sizing: border-box;
+					text-align: center;
 			   }
-		#container{
-				width: 100vw;
-				height: 100vh;	
+			#gui
+				{
+					position: fixed;
+					bottom: 5vh;
+					right: 1vw;
+				}
+			#script
+				{
+					position: absolute;
+				}
+			h6{
+					display: inline;
+					background-color: white;
+					border-radius: 5px;
+					padding: 10px;
+				}
+			h1
+				{ color: #19323c; text-align: center;}
+			h4
+				{ color: #19323c; text-align: left;}
+			/* Style the button that is used to open and close the collapsible content */
+			.accordion {
+			  background-color: #e5e6eb;
+			  color: black;
+			  cursor: pointer;
+			  padding: 18px;
+			  width: 100%;
+			  text-align: left;
+			  border: 1px;
+			  outline: none;
+			  transition: 0.4s;
+			  font-size: 15px;
+			}
+			
+			/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+			.active, .collapsible:hover {
+			  background-color: #d2d4dc;
+			}
+		
+			/* Style the collapsible content. Note: hidden by default */
+			.content {
+			  padding: 0 30px;
+			  background-color: white;
+			  max-height: 0;
+			  overflow: hidden;
+			  transition: max-height 0.2s ease-out;
+			  }
+			  .accordion:after {
+				  content: '\02795'; /* Unicode character for "plus" sign (+) */
+				  font-size: 13px;
+				  color: #d9dbf1;
+				  float: right;
+				  margin-left: 5px;
+				}
+				
+				.active:after {
+				  content: "\2796"; /* Unicode character for "minus" sign (-) */
+				}
+				.discr
+				{
+				 text-align: left;
 				}
 		</style>
 	</head>
-	<body>
-	<h1> Hello World! Welcome to my Introductory MD Simulation  </h1> <br>
+<body>
+	<h1> Introductory, Interactive Molecular Dynamics Simulation  </h1> <br>
 	
-		<div id = info> Clicked Particle Data <br><br>
-			 <p id = "particle">  </p> 
-			 <p id = "position">  </p> 
-			 <p id = "velocity">  </p> 
-			 <p id = "acceleration">  </p>
-		     <p id = "fNet">  </p>
+		 <p>Experimental Presets </p>
+    	<button class="accordion">Temperature and Speed</button>
+		<div class="content">
+  			<div class = "descr">For this experiment, first find the settings box in the lower right section of the screen.
+  				Within "system Settings", select “Temperature and Speed” 
+  				from the experimental preset drop down menu. 
+  				After the settings change, vary the Temperature setting and observe how it affects the system</div>
+  			<h4>Consider the following questions</h4>
+  			<ul>
+  				<li>When you increase temperature, what happens to the speed of the particles? What about when you decrease temperature?</li>
+  				<li>Can you get the particles to form a crystal structure? </li>
+  				<li>When do you see more intermolecular interactions occurring, at high or low temperatures? </li>
+  				<li>When do the particles form a solid? When do they form a gas?</li>
+  			</ul>
 		</div>
+		<button class="accordion">Attractive and Repulsive Forces</button>
+		<div class="content">
+  			<p>For this experiment, select “Attractive and Repulsive” forces within 
+  				the experimental preset drop down menu. After the settings change, You will now see the particles color’s change to green and red. 
+  				These colors represent the balance between the attractive and repulsive forces acting on the particles. 
+  				When a particle is  green, it is feeling an attractive force.
+  				When a particle is red, it is a repulsive force. When attractive and repulsive forces are in equilibrium, the particle will switch between red and green rapidly. 
+			</p>
+		</div>
+		<button class="accordion">Net Force and Distance</button>
+		<div class="content">
+  			<p>For this experiment, select “Force and Distance” within the experimental preset drop down menu. 
+  			  After the settings change, click a particle and observe how its position, velocity and acceleration change depending on how far/close it is to other particles.
+  			   Remember that acceleration is related to the net force a particle is experiencing by Newton’s second Law: F = ma (Net force = mass * acceleration).  
+  			</p>
+		</div>
+		<button class="accordion">Intermolecular Interactions and Particle Size</button>
+		<div class="content">
+  			<p>For this experiment, select “Particle Size” within the experimental preset drop down menu. 
+  			   After the settings change, vary the radius setting and observe how the strength of interactions between particles change. </p>
+		</div>
+		<div id = info> Clicked Particle Data <br><br>
+			 <h6 id = "particle">  </h6> 
+			 <h6 id = "position">  </h6> 
+			 <h6 id = "velocity">  </h6> 
+			 <h6 id = "acceleration">  </h6>
+		     <h6 id = "fNet">  </h6>
+		</div>
+		<div id = "gui"></div>
 
     <!-- CDN Link to Three.js -->
-    
+    		
+		<script>
+			var acc = document.getElementsByClassName("accordion");
+			var i;
+			
+			for (i = 0; i < acc.length; i++) {
+			  acc[i].addEventListener("click", function() {
+			    this.classList.toggle("active");
+			    var content = this.nextElementSibling;
+			    if (content.style.maxHeight) {
+			    	content.style.maxHeight = null;
+			    } else {
+			    	content.style.maxHeight = content.scrollHeight + "px";
+			    }
+			  });
+			}
+		</script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/three@0.122.0/examples/js/controls/OrbitControls.min.js"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
 		<!--reference your JS file here. Mine looks like below-->
-    	<div id = "container"> <script src="MD_WithGUI.js"></script></div>
-    	
-    <p>Experimental Presets </p>
-    <ol>
-    	<li>Keep all parameters constant but vary temperature</li>
-      	<li>Keep all parameters constant but observe relationship between net force on a particle and it’s distance from other particles</li>
-        <li>Keep all parameters constant but vary time step </li>
-        <li>Keep all parameters constant but vary particle size </li>
-    </ol>
+    	<script id = "script" src="MD_WithGUI.js"></script>
     </body>
 </html>
