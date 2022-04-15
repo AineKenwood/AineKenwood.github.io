@@ -678,11 +678,11 @@ function animate()
 			const positionText = document.getElementById("position");
 			positionText.innerHTML = "Position =  [" + textPositionX + ","+ textPositionY + "," + textPositionZ+ "]";
 			const velocityText = document.getElementById("velocity");
-			velocityText.innerHTML = "Velocity = [" +magVelocity+ "]" ;
+			velocityText.innerHTML = "Magnitude of Velocity = [" +magVelocity+ "]" ;
 			const accText = document.getElementById("acceleration");
-			accText.innerHTML = "Acceleration = [" +magAcc+ "]";
+			accText.innerHTML = "Magnitude of Acceleration = [" +magAcc+ "]";
 			const fText = document.getElementById("fNet");
-			fText.innerHTML = "Net Force =  [" +magFnet+ "]";
+			fText.innerHTML = "Magnitude of Net Force =  [" +magFnet+ "]";
 		}
 
 	}	
