@@ -379,9 +379,9 @@ function setUpPreset()
 			options.radius = 10;
 			options.epsilon = 1; 
 			options.temperature = 150;
-			options.magnitude_of_negative_charges = 3;
-			options.magnitude_of_positive_charges = 3;
-			options.time_step = 0.001; 
+			options.magnitude_of_negative_charges = 4;
+			options.magnitude_of_positive_charges = 4;
+			options.time_step = 0.002; 
 			options.show_forces = false; 
 			resetSim();
 			break;
