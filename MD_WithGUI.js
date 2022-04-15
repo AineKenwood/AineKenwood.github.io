@@ -418,9 +418,10 @@ function setUpPreset()
 setUpParticles(options.positive,options.negative,options.neutral);
 
 var textPositionX; var textPositionX; var textPositionX;
-var textVelocityX; var textVelocityY;  var textVelocityZ; 
+/*var textVelocityX; var textVelocityY;  var textVelocityZ; 
 var textAccelerationX; var textAccelerationY; var textAccelerationZ; 
-var textFNetX; var textFNetY; var textFNetZ;
+var textFNetX; var textFNetY; var textFNetZ;*/
+var magVelocity; var magFnet; var magAcc;
 function animate()
 {
 	//var PE = 0; 
@@ -587,12 +588,18 @@ function animate()
 		
 			if (current == particleIndex)
 	  		{
-				textFNetX = Math.trunc(Fnet[0]); 
-				textFNetY = Math.trunc(Fnet[1]); 
-				textFNetZ = Math.trunc(Fnet[2]); 
-				textAccelerationX = Math.trunc(particleArray[current].Acceleration[0]);
-				textAccelerationY = Math.trunc(particleArray[current].Acceleration[1]);
-				textAccelerationZ = Math.trunc(particleArray[current].Acceleration[2]);
+				//textFNetX = Math.trunc(Fnet[0]); 
+				//textFNetY = Math.trunc(Fnet[1]); 
+				//textFNetZ = Math.trunc(Fnet[2]); 
+				magFnet = Math.trunc(Math.sqrt(Math.pow(Fnet[0],2) +
+							  Math.pow(Fnet[1],2)+
+				  			  Math.pow(Fnet[2],2)));
+				//textAccelerationX = Math.trunc(particleArray[current].Acceleration[0]);
+				//textAccelerationY = Math.trunc(particleArray[current].Acceleration[1]);
+				//textAccelerationZ = Math.trunc(particleArray[current].Acceleration[2]);
+				magAcc = Math.trunc(Math.sqrt(Math.pow(particleArray[current].Acceleration[0],2) +
+							  Math.pow(particleArray[current].Acceleration[1],2)+
+				  			  Math.pow(particleArray[current].Acceleration[2],2)));
 			}
 			//console.log(particleArray[current].Acceleration)
 			
@@ -629,9 +636,13 @@ function animate()
 	  	    
 	  	    if (particleIndex != -1)
 	  		{
-				textVelocityX = Math.trunc(particleArray[current].Velocity[0]);
-				textVelocityY = Math.trunc(particleArray[current].Velocity[1]);
-				textVelocityZ = Math.trunc(particleArray[current].Velocity[2]);
+				//textVelocityX = Math.trunc(particleArray[current].Velocity[0]);
+				//textVelocityY = Math.trunc(particleArray[current].Velocity[1]);
+				//textVelocityZ = Math.trunc(particleArray[current].Velocity[2]);
+				magVelocity = Math.trunc(Math.sqrt(Math.pow(particleArray[current].Velocity[0],2) +
+							  Math.pow(particleArray[current].Velocity[1],2)+
+				  			  Math.pow(particleArray[current].Velocity[2],2)));
+				  			  
 			}
 		}
 		
@@ -667,11 +678,11 @@ function animate()
 			const positionText = document.getElementById("position");
 			positionText.innerHTML = "Position =  [" + textPositionX + ","+ textPositionY + "," + textPositionZ+ "]";
 			const velocityText = document.getElementById("velocity");
-			velocityText.innerHTML = "Velocity = [" + textVelocityX + ","+ textVelocityY + "," + textVelocityZ+ "]" ;
+			velocityText.innerHTML = "Velocity = [" +magVelocity+ "]" ;
 			const accText = document.getElementById("acceleration");
-			accText.innerHTML = "Acceleration =  [" + textAccelerationX + ","+ textAccelerationY + "," + textAccelerationZ+ "]";
+			accText.innerHTML = "Acceleration = [" +magAcc+ "]";
 			const fText = document.getElementById("fNet");
-			fText.innerHTML = "Net Force =  [" + textFNetX + ","+ textFNetY + "," + textFNetZ+ "]";
+			fText.innerHTML = "Net Force =  [" +magFnet+ "]";
 		}
 
 	}	
