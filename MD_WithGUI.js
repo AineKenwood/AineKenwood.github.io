@@ -347,13 +347,13 @@ function setUpPreset()
 	switch(preset)
 	{
 		case "Temperature and Speed":
-			options.positive = 10;
-			options.negative = 10;
-			options.neutral = 10;
-			options.radius = 10;
-			options.epsilon = 1000; 
-			options.magnitude_of_negative_charges = 1;
-			options.magnitude_of_positive_charges = 1;
+			options.positive = 20;
+			options.negative = 20;
+			options.neutral = 0;
+			options.radius = 5;
+			options.epsilon = 1; 
+			options.magnitude_of_negative_charges = 4;
+			options.magnitude_of_positive_charges = 4;
 			options.show_forces = false;
 			options.time_step = 0.001; 
 			options.temperature = 250;
